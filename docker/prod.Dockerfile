@@ -13,7 +13,7 @@ COPY . .
 RUN go build -o main ./cmd/main.go
 
 # Final Stage
-FROM alpine:latest  # ใช้ Alpine ธรรมดาเพื่อลดขนาด
+FROM alpine:latest AS final
 WORKDIR /root/
 
 # Copy the built binary from builder
