@@ -1,23 +1,19 @@
-# Build Stage
 FROM golang:1.22 AS builder
 WORKDIR /app
 
-# Copy go.mod and download dependencies
+# คัดลอกไฟล์ go.mod และ go.sum
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy application source
+# คัดลอกโค้ดแอปพลิเคชัน
 COPY . .
 
-# Build the application
-RUN go build -o main ./cmd/main.go
-
-# Final Stage
-FROM alpine:latest AS final
+# ขั้นตอนการสร้างภาพสุดท้าย
+FROM golang:1.22-alpine
 WORKDIR /root/
 
-# Copy the built binary from builder
-COPY --from=builder /app/main .
+# คัดลอกโค้ดแอปพลิเคชันจาก builder
+COPY --from=builder /app .
 
-# Set the default command
-CMD ["./main"]
+# รันแอปพลิเคชันด้วย go run main.go
+CMD ["go", "run", "./cmd/main.go"]
